@@ -16,6 +16,12 @@ contact:
     - label: Portfolio
       url: https://your-domain.example
 
+sectionOrder:
+  - experience
+  - projects
+  - education
+  - skills
+
 experience:
   - title: Software Engineer, Example Cloud Platform
     dates: Month YYYY - Present

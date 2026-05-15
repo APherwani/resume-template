@@ -5,6 +5,7 @@ const letterPageHeight = 1056;
 const state = {
     resume: null,
     assets: null,
+    openSection: "Section Order",
     previewTimer: null,
 };
 
@@ -14,9 +15,15 @@ const elements = {
     status: document.querySelector("#status"),
     pageStatus: document.querySelector("#page-status"),
     printButton: document.querySelector("#print-button"),
+    themeToggle: document.querySelector("#theme-toggle"),
 };
 
+initializeTheme();
+
 elements.printButton.addEventListener("click", printResume);
+elements.themeToggle.addEventListener("change", () => {
+    setTheme(elements.themeToggle.checked ? "dark" : "light", true);
+});
 elements.preview.addEventListener("load", updatePageStatus);
 
 load();
@@ -29,6 +36,7 @@ async function load() {
             fetchText(new URL("../templates/resume.html", import.meta.url)),
         ]);
         state.resume = parseYaml(source);
+        ensureResumeSectionOrder(state.resume);
         state.assets = { styles, template };
         renderEditor();
         await renderPreview();
@@ -48,13 +56,84 @@ async function fetchText(url) {
 }
 
 function renderEditor() {
+    ensureResumeSectionOrder(state.resume);
+    const editableSections = state.resume.sectionOrder.map((key) => {
+        const sectionDefinition = resumeSectionDefinitions().find((section) => section.key === key);
+        return section(sectionDefinition.title, sectionDefinition.render());
+    });
+
     elements.form.replaceChildren(
+        section("Section Order", renderResumeSectionOrder()),
         section("Contact", renderContact()),
-        section("Work Experience", renderExperience()),
-        section("Projects", renderProjects()),
-        section("Education", renderEducation()),
-        section("Skills", renderSkills()),
+        ...editableSections,
     );
+}
+
+function resumeSectionDefinitions() {
+    return [
+        { key: "experience", title: "Work Experience", render: renderExperience },
+        { key: "projects", title: "Projects", render: renderProjects },
+        { key: "education", title: "Education", render: renderEducation },
+        { key: "skills", title: "Skills", render: renderSkills },
+    ];
+}
+
+function renderResumeSectionOrder() {
+    ensureResumeSectionOrder(state.resume);
+
+    const body = div("section-body");
+    const list = div("order-list");
+
+    state.resume.sectionOrder.forEach((key, index) => {
+        const orderRow = div("order-row");
+        const label = document.createElement("span");
+        label.textContent = resumeSectionLabel(key);
+
+        const controls = div("order-controls");
+        const up = document.createElement("button");
+        up.type = "button";
+        up.textContent = "Up";
+        up.disabled = index === 0;
+        up.addEventListener("click", () => {
+            moveResumeSection(index, -1);
+            changed(true);
+        });
+
+        const down = document.createElement("button");
+        down.type = "button";
+        down.textContent = "Down";
+        down.disabled = index === state.resume.sectionOrder.length - 1;
+        down.addEventListener("click", () => {
+            moveResumeSection(index, 1);
+            changed(true);
+        });
+
+        controls.append(up, down);
+        orderRow.append(label, controls);
+        list.append(orderRow);
+    });
+
+    body.append(list);
+    return body;
+}
+
+function ensureResumeSectionOrder(resume) {
+    const keys = resumeSectionDefinitions().map((section) => section.key);
+    resume.sectionOrder = normalizeOrder(resume.sectionOrder, keys);
+}
+
+function resumeSectionLabel(key) {
+    return resumeSectionDefinitions().find((section) => section.key === key)?.title ?? key;
+}
+
+function moveResumeSection(index, direction) {
+    const nextIndex = index + direction;
+    if (nextIndex < 0 || nextIndex >= state.resume.sectionOrder.length) {
+        return;
+    }
+
+    const [item] = state.resume.sectionOrder.splice(index, 1);
+    state.resume.sectionOrder.splice(nextIndex, 0, item);
 }
 
 function renderContact() {
@@ -153,25 +232,7 @@ function renderContactOrder(contact) {
 
 function ensureContactOrder(contact) {
     const keys = contactOrderKeys(contact);
-    const allowed = new Set(keys);
-    const seen = new Set();
-    const normalized = [];
-
-    for (const key of contact.order ?? keys) {
-        if (typeof key !== "string" || !allowed.has(key) || seen.has(key)) {
-            continue;
-        }
-        normalized.push(key);
-        seen.add(key);
-    }
-
-    for (const key of keys) {
-        if (!seen.has(key)) {
-            normalized.push(key);
-        }
-    }
-
-    contact.order = normalized;
+    contact.order = normalizeOrder(contact.order, keys);
 }
 
 function contactOrderKeys(contact) {
@@ -209,6 +270,28 @@ function moveContactOrderItem(contact, index, direction) {
     contact.order.splice(nextIndex, 0, item);
 }
 
+function normalizeOrder(order, keys) {
+    const allowed = new Set(keys);
+    const seen = new Set();
+    const normalized = [];
+
+    for (const key of order ?? keys) {
+        if (typeof key !== "string" || !allowed.has(key) || seen.has(key)) {
+            continue;
+        }
+        normalized.push(key);
+        seen.add(key);
+    }
+
+    for (const key of keys) {
+        if (!seen.has(key)) {
+            normalized.push(key);
+        }
+    }
+
+    return normalized;
+}
+
 function addContactLink(contact) {
     contact.links.push({ label: "", url: "" });
     ensureContactOrder(contact);
@@ -240,12 +323,14 @@ function renderExperience() {
     state.resume.experience.forEach((job, index) => {
         job.bullets ??= [""];
 
-        const entry = div("entry");
-        entry.append(
-            entryHeader(`Role ${index + 1}`, () => {
+        const entry = collapsibleEntry(
+            `Role ${index + 1}`,
+            job.title,
+            () => {
                 state.resume.experience.splice(index, 1);
                 changed(true);
-            }),
+            },
+            index === 0,
             row([
                 field("Title", job.title, (value) => {
                     job.title = value;
@@ -278,12 +363,14 @@ function renderProjects() {
     state.resume.projects.forEach((project, index) => {
         project.bullets ??= project.description ? [project.description] : [""];
 
-        const entry = div("entry");
-        entry.append(
-            entryHeader(`Project ${index + 1}`, () => {
+        const entry = collapsibleEntry(
+            `Project ${index + 1}`,
+            project.name,
+            () => {
                 state.resume.projects.splice(index, 1);
                 changed(true);
-            }),
+            },
+            index === 0,
             field("Name", project.name, (value) => {
                 project.name = value;
             }),
@@ -309,12 +396,14 @@ function renderEducation() {
     state.resume.education ??= [];
 
     state.resume.education.forEach((education, index) => {
-        const entry = div("entry");
-        entry.append(
-            entryHeader(`School ${index + 1}`, () => {
+        const entry = collapsibleEntry(
+            `School ${index + 1}`,
+            education.school,
+            () => {
                 state.resume.education.splice(index, 1);
                 changed(true);
-            }),
+            },
+            index === 0,
             row([
                 field("School", education.school, (value) => {
                     education.school = value;
@@ -351,12 +440,14 @@ function renderSkills() {
     state.resume.skills ??= [];
 
     state.resume.skills.forEach((skill, index) => {
-        const entry = div("entry");
-        entry.append(
-            entryHeader(`Skill group ${index + 1}`, () => {
+        const entry = collapsibleEntry(
+            `Skill group ${index + 1}`,
+            skill.label,
+            () => {
                 state.resume.skills.splice(index, 1);
                 changed(true);
-            }),
+            },
+            index === 0,
             field("Label", skill.label, (value) => {
                 skill.label = value;
             }),
@@ -411,10 +502,23 @@ function bulletList(bullets) {
 function section(title, body) {
     const details = document.createElement("details");
     details.className = "form-section";
-    details.open = true;
+    details.open = state.openSection === title;
 
     const summary = document.createElement("summary");
     summary.textContent = title;
+    details.addEventListener("toggle", () => {
+        if (!details.open || state.openSection === title) {
+            return;
+        }
+
+        state.openSection = title;
+        for (const section of elements.form.querySelectorAll(".form-section")) {
+            if (section !== details) {
+                section.open = false;
+            }
+        }
+    });
+
     details.append(summary, body);
     return details;
 }
@@ -459,6 +563,40 @@ function entryHeader(title, onRemove) {
 
     header.append(label, remove);
     return header;
+}
+
+function collapsibleEntry(title, subtitle, onRemove, open, ...children) {
+    const details = document.createElement("details");
+    details.className = "entry collapsible-entry";
+    details.open = open;
+
+    const summary = document.createElement("summary");
+    summary.className = "entry-summary";
+
+    const labelGroup = div("entry-labels");
+    const label = div("entry-title");
+    label.textContent = title;
+    labelGroup.append(label);
+
+    if (subtitle) {
+        const sublabel = div("entry-subtitle");
+        sublabel.textContent = subtitle;
+        labelGroup.append(sublabel);
+    }
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "danger";
+    remove.textContent = "Remove";
+    remove.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        onRemove();
+    });
+
+    summary.append(labelGroup, remove);
+    details.append(summary, ...children);
+    return details;
 }
 
 function actionRow(label, onClick, hintText = "Changes update the preview automatically.") {
@@ -534,4 +672,20 @@ function printResume() {
 
 function setStatus(message) {
     elements.status.textContent = message;
+}
+
+function initializeTheme() {
+    const savedTheme = localStorage.getItem("resumeBuilderTheme");
+    const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    setTheme(savedTheme || preferredTheme, false);
+}
+
+function setTheme(theme, save) {
+    const normalized = theme === "dark" ? "dark" : "light";
+    document.documentElement.dataset.theme = normalized;
+    elements.themeToggle.checked = normalized === "dark";
+
+    if (save) {
+        localStorage.setItem("resumeBuilderTheme", normalized);
+    }
 }

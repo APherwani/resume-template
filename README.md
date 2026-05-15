@@ -20,6 +20,8 @@ Use **Print / PDF** to open the browser print dialog and save a PDF.
 Default resume content lives in [content/resume.yml](content/resume.yml):
 
 - Update the placeholder roles, dates, bullets, projects, education, and skills.
+- Change `sectionOrder` when you want Projects, Education, Skills, or Work
+  Experience to appear in a different order.
 - Use Markdown-style links inside bullets when needed:
   `[Project](https://example.com)`.
 - Keep indentation at two spaces.

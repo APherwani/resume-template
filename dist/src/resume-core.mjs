@@ -16,19 +16,15 @@ export function resumePdfFilename(resume, date = new Date()) {
 }
 
 export function renderResume(resume) {
-    const sections = [
-        renderHeader(resume.contact),
-        renderSection("Work Experience", resume.experience.map(renderJob).join("\n\n")),
-    ];
+    const sections = [renderHeader(resume.contact)];
+    const sectionByKey = new Map(resumeSectionDefinitions().map((section) => [section.key, section]));
 
-    if (resume.projects?.length) {
-        sections.push(renderSection("Projects", resume.projects.map(renderProject).join("\n\n")));
+    for (const key of normalizeSectionOrder(resume.sectionOrder)) {
+        const section = sectionByKey.get(key);
+        if (section?.hasContent(resume)) {
+            sections.push(renderSection(section.title, section.render(resume)));
+        }
     }
-
-    sections.push(
-        renderSection("Education", resume.education.map(renderEducation).join("\n\n")),
-        renderSection("Skills", renderSkills(resume.skills)),
-    );
 
     return sections.join("\n\n");
 }
@@ -69,6 +65,11 @@ export function stringifyResumeYaml(resume) {
     for (const link of resume.contact.links ?? []) {
         lines.push(`    - label: ${yamlScalar(link.label)}`);
         scalar(lines, 6, "url", link.url);
+    }
+
+    lines.push("", "sectionOrder:");
+    for (const key of normalizeSectionOrder(resume.sectionOrder)) {
+        lines.push(`  - ${yamlScalar(key, { listItem: true })}`);
     }
 
     lines.push("", "experience:");
@@ -140,6 +141,43 @@ function renderHeader(contact) {
         `        <div class="contact">${contactLine}</div>`,
         "    </div>",
     ].join("\n");
+}
+
+function resumeSectionDefinitions() {
+    return [
+        {
+            key: "experience",
+            title: "Work Experience",
+            hasContent: (resume) => Boolean(resume.experience?.length),
+            render: (resume) => resume.experience.map(renderJob).join("\n\n"),
+        },
+        {
+            key: "projects",
+            title: "Projects",
+            hasContent: (resume) => Boolean(resume.projects?.length),
+            render: (resume) => resume.projects.map(renderProject).join("\n\n"),
+        },
+        {
+            key: "education",
+            title: "Education",
+            hasContent: (resume) => Boolean(resume.education?.length),
+            render: (resume) => resume.education.map(renderEducation).join("\n\n"),
+        },
+        {
+            key: "skills",
+            title: "Skills",
+            hasContent: (resume) => Boolean(resume.skills?.length),
+            render: (resume) => renderSkills(resume.skills),
+        },
+    ];
+}
+
+function sectionOrderKeys() {
+    return resumeSectionDefinitions().map((section) => section.key);
+}
+
+function normalizeSectionOrder(order) {
+    return normalizeContactOrder(order, sectionOrderKeys());
 }
 
 function contactItems(contact) {
