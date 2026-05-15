@@ -44,9 +44,14 @@ The build writes:
 ## Deploy To GitHub Pages
 
 This repo includes a Pages workflow at
-[.github/workflows/pages.yml](.github/workflows/pages.yml). After pushing to
-`main`, enable GitHub Pages for the repository and choose **GitHub Actions** as
-the source. The workflow builds `dist` and deploys it.
+[.github/workflows/pages.yml](.github/workflows/pages.yml). Before the first
+successful deploy, enable GitHub Pages for the repository:
+
+1. Open **Settings** -> **Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Save the setting, then rerun the **Deploy GitHub Pages** workflow.
+
+After that one-time setup, pushes to `main` build `dist` and deploy it.
 
 Before publishing, search the repo for any real personal details you do not want
 online.
