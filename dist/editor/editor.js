@@ -5,7 +5,7 @@ const letterPageHeight = 1056;
 const state = {
     resume: null,
     assets: null,
-    openSection: "Section Order",
+    openSection: "",
     previewTimer: null,
 };
 
@@ -21,8 +21,9 @@ const elements = {
 initializeTheme();
 
 elements.printButton.addEventListener("click", printResume);
-elements.themeToggle.addEventListener("change", () => {
-    setTheme(elements.themeToggle.checked ? "dark" : "light", true);
+elements.themeToggle.addEventListener("click", () => {
+    const nextTheme = elements.themeToggle.getAttribute("aria-pressed") === "true" ? "light" : "dark";
+    setTheme(nextTheme, true);
 });
 elements.preview.addEventListener("load", updatePageStatus);
 
@@ -683,7 +684,7 @@ function initializeTheme() {
 function setTheme(theme, save) {
     const normalized = theme === "dark" ? "dark" : "light";
     document.documentElement.dataset.theme = normalized;
-    elements.themeToggle.checked = normalized === "dark";
+    elements.themeToggle.setAttribute("aria-pressed", String(normalized === "dark"));
 
     if (save) {
         localStorage.setItem("resumeBuilderTheme", normalized);
