@@ -1,0 +1,84 @@
+# Edit resume content here, then run `npm run build`.
+contact:
+  name: JORDAN LEE
+  phone: (555) 123-4567
+  email: jordan.lee@example.com
+  location: City, ST
+  order:
+    - phone
+    - email
+    - "link:0"
+    - "link:1"
+    - location
+  links:
+    - label: GitHub
+      url: https://github.com/your-username
+    - label: Portfolio
+      url: https://your-domain.example
+
+experience:
+  - title: Software Engineer, Example Cloud Platform
+    dates: Month YYYY - Present
+    bullets:
+      - Build and maintain backend services that process high-volume customer workflows with a focus on reliability, observability, and clear operational ownership.
+      - Led a migration from a legacy service to a modular architecture, reducing deployment risk and making future feature work easier to test and review.
+      - Improved production debugging by adding structured logs, service health metrics, and runbook coverage for common incident patterns.
+      - Partnered with product and design peers to scope customer-facing improvements, turning ambiguous requirements into small, shippable milestones.
+
+  - title: Software Engineer, Example Product Team
+    dates: Month YYYY - Month YYYY
+    bullets:
+      - Developed REST APIs and background jobs for a customer dashboard used by internal support and account teams.
+      - Reduced page load time by optimizing database queries, trimming unused payload fields, and adding targeted caching.
+      - Wrote unit and integration tests for critical flows, improving confidence in weekly releases.
+
+  - title: Software Engineering Intern, Example Company
+    dates: Month YYYY - Month YYYY
+    bullets:
+      - Built a status-tracking service for asynchronous workflows, improving visibility into long-running operations.
+      - Presented project results to engineering leadership and documented follow-up work for the owning team.
+
+projects:
+  - name: Inventory Insights Dashboard
+    bullets:
+      - Built a full-stack dashboard that helps users track inventory trends, filter by category, and export weekly summaries.
+      - Designed the data model, API routes, and responsive UI using TypeScript, SQL, and a component-based frontend.
+  - name: Collaboration Card Game
+    bullets:
+      - Created a browser-based multiplayer game with real-time rooms, shared state, and keyboard-friendly controls.
+      - Added automated checks for core game rules to prevent regressions while iterating on gameplay.
+
+education:
+  - school: Example University
+    dates: Month YYYY - Month YYYY
+    degree: Bachelor of Science in Computer Science
+    details:
+      - Relevant coursework: Data Structures, Operating Systems, Databases, Distributed Systems
+
+skills:
+  - label: Languages
+    items:
+      - TypeScript
+      - JavaScript
+      - Python
+      - Go
+      - SQL
+  - label: Backend
+    items:
+      - REST APIs
+      - PostgreSQL
+      - Redis
+      - Message queues
+      - Observability
+  - label: Frontend
+    items:
+      - React
+      - HTML
+      - CSS
+      - Accessibility
+  - label: Practices
+    items:
+      - Testing
+      - Code review
+      - Incident response
+      - Technical writing

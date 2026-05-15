@@ -1,0 +1,90 @@
+@page {
+    size: Letter;
+    margin: 0;
+}
+
+body {
+    font-family: "Times New Roman", serif;
+    font-size: 10.5pt;
+    line-height: 1.2;
+    margin: 0.5in;
+    color: #000;
+}
+
+a {
+    color: inherit;
+}
+
+.header {
+    text-align: center;
+    border-bottom: 1px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.name {
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.contact {
+    font-size: 10pt;
+}
+
+.section-title {
+    font-size: 12pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #000;
+}
+
+.job-header,
+.education-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.job-header {
+    margin-top: 8px;
+}
+
+.job-title {
+    font-size: 11pt;
+}
+
+.job-dates {
+    font-size: 10pt;
+    font-style: italic;
+}
+
+.job-details ul,
+.skills ul {
+    margin: 0;
+    padding-left: 15px;
+    list-style-type: disc;
+}
+
+.job-details li {
+    margin-bottom: 2px;
+    text-align: justify;
+}
+
+.project {
+    margin-top: 4px;
+}
+
+.skills li {
+    margin-bottom: 2px;
+}
+
+@media print {
+    body {
+        margin: 0.5in;
+    }
+}

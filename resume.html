@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JORDAN LEE - Resume</title>
+    <style>
+        @page {
+            size: Letter;
+            margin: 0;
+        }
+        
+        body {
+            font-family: "Times New Roman", serif;
+            font-size: 10.5pt;
+            line-height: 1.2;
+            margin: 0.5in;
+            color: #000;
+        }
+        
+        a {
+            color: inherit;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .name {
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .contact {
+            font-size: 10pt;
+        }
+        
+        .section-title {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #000;
+        }
+        
+        .job-header,
+        .education-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .job-header {
+            margin-top: 8px;
+        }
+        
+        .job-title {
+            font-size: 11pt;
+        }
+        
+        .job-dates {
+            font-size: 10pt;
+            font-style: italic;
+        }
+        
+        .job-details ul,
+        .skills ul {
+            margin: 0;
+            padding-left: 15px;
+            list-style-type: disc;
+        }
+        
+        .job-details li {
+            margin-bottom: 2px;
+            text-align: justify;
+        }
+        
+        .project {
+            margin-top: 4px;
+        }
+        
+        .skills li {
+            margin-bottom: 2px;
+        }
+        
+        @media print {
+            body {
+                margin: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Generated from content/resume.yml, styles/resume.css, and templates/resume.html. Run `npm run build` after edits. -->
+    <div class="header">
+        <div class="name">JORDAN LEE</div>
+        <div class="contact">(555) 123-4567 | <a href="mailto:jordan.lee@example.com">jordan.lee@example.com</a> | <a href="https://github.com/your-username">GitHub</a> | <a href="https://your-domain.example">Portfolio</a> | City, ST</div>
+    </div>
+
+    <div class="section-title">Work Experience</div>
+
+    <div class="job-header">
+        <span class="job-title">Software Engineer, Example Cloud Platform</span>
+        <span class="job-dates">Month YYYY - Present</span>
+    </div>
+    <div class="job-details">
+        <ul>
+            <li>Build and maintain backend services that process high-volume customer workflows with a focus on reliability, observability, and clear operational ownership.</li>
+            <li>Led a migration from a legacy service to a modular architecture, reducing deployment risk and making future feature work easier to test and review.</li>
+            <li>Improved production debugging by adding structured logs, service health metrics, and runbook coverage for common incident patterns.</li>
+            <li>Partnered with product and design peers to scope customer-facing improvements, turning ambiguous requirements into small, shippable milestones.</li>
+        </ul>
+    </div>
+
+    <div class="job-header">
+        <span class="job-title">Software Engineer, Example Product Team</span>
+        <span class="job-dates">Month YYYY - Month YYYY</span>
+    </div>
+    <div class="job-details">
+        <ul>
+            <li>Developed REST APIs and background jobs for a customer dashboard used by internal support and account teams.</li>
+            <li>Reduced page load time by optimizing database queries, trimming unused payload fields, and adding targeted caching.</li>
+            <li>Wrote unit and integration tests for critical flows, improving confidence in weekly releases.</li>
+        </ul>
+    </div>
+
+    <div class="job-header">
+        <span class="job-title">Software Engineering Intern, Example Company</span>
+        <span class="job-dates">Month YYYY - Month YYYY</span>
+    </div>
+    <div class="job-details">
+        <ul>
+            <li>Built a status-tracking service for asynchronous workflows, improving visibility into long-running operations.</li>
+            <li>Presented project results to engineering leadership and documented follow-up work for the owning team.</li>
+        </ul>
+    </div>
+
+    <div class="section-title">Projects</div>
+
+    <div class="job-header project-header">
+        <span class="job-title">Inventory Insights Dashboard</span>
+    </div>
+    <div class="job-details project-details">
+        <ul>
+            <li>Built a full-stack dashboard that helps users track inventory trends, filter by category, and export weekly summaries.</li>
+            <li>Designed the data model, API routes, and responsive UI using TypeScript, SQL, and a component-based frontend.</li>
+        </ul>
+    </div>
+
+    <div class="job-header project-header">
+        <span class="job-title">Collaboration Card Game</span>
+    </div>
+    <div class="job-details project-details">
+        <ul>
+            <li>Created a browser-based multiplayer game with real-time rooms, shared state, and keyboard-friendly controls.</li>
+            <li>Added automated checks for core game rules to prevent regressions while iterating on gameplay.</li>
+        </ul>
+    </div>
+
+    <div class="section-title">Education</div>
+
+    <div class="education-header">
+        <span class="job-title">Example University</span>
+        <span class="job-dates">Month YYYY - Month YYYY</span>
+    </div>
+    <div>Bachelor of Science in Computer Science</div>
+    <div>Relevant coursework: Data Structures, Operating Systems, Databases, Distributed Systems</div>
+
+    <div class="section-title">Skills</div>
+
+    <div class="skills">
+        <ul>
+            <li><strong>Languages:</strong> TypeScript, JavaScript, Python, Go, SQL</li>
+            <li><strong>Backend:</strong> REST APIs, PostgreSQL, Redis, Message queues, Observability</li>
+            <li><strong>Frontend:</strong> React, HTML, CSS, Accessibility</li>
+            <li><strong>Practices:</strong> Testing, Code review, Incident response, Technical writing</li>
+        </ul>
+    </div>
+</body>
+</html>
+

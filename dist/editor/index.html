@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Template Builder</title>
+    <link rel="stylesheet" href="./editor.css">
+</head>
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div>
+                <h1>Resume Template Builder</h1>
+                <p id="status">Loading resume...</p>
+            </div>
+            <div class="actions">
+                <button id="print-button" type="button">Print / PDF</button>
+            </div>
+        </header>
+
+        <main class="workspace">
+            <section class="editor-pane" aria-label="Resume fields">
+                <form id="resume-form"></form>
+            </section>
+
+            <section class="preview-pane" aria-label="Resume preview">
+                <div class="preview-toolbar">
+                    <strong>Print Preview</strong>
+                    <span id="page-status" class="page-status">Checking length...</span>
+                </div>
+                <div class="preview-scroll">
+                    <iframe id="preview" class="preview-frame" title="Generated resume preview"></iframe>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="./editor.js"></script>
+</body>
+</html>
